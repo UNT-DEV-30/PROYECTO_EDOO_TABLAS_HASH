@@ -3,7 +3,7 @@ from registro import Registro
 
 class TablaHashEncadenamiento:
     def __init__(self, capacidad: int) -> None:
-        self.__arreglo: list[Registro] = [None] * capacidad
+        self.__arreglo: list[ListaSimple] = [None] * capacidad
         self.capacidad = capacidad
 
     def insertar(self, registro: Registro) -> None:
@@ -22,4 +22,14 @@ class TablaHashEncadenamiento:
     def buscar(self, codigo: int) -> Registro | None:
         posicion = codigo % self.capacidad
 
-        
+        return self.__arreglo[posicion].buscar_codigo(codigo)
+
+    def modificar(self, codigo: int, nombre: str) -> None:
+        posicion = codigo % self.capacidad
+
+        self.__arreglo[posicion].modificar(codigo, nombre)
+
+    def eliminar_codigo(self, codigo: int) -> None:
+        posicion = codigo % self.capacidad
+
+        self.__arreglo[posicion].eliminar_codigo(codigo)

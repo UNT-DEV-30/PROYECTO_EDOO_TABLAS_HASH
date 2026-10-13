@@ -1,10 +1,12 @@
-from typing import Generic, TypeVar
-from nodo import Nodo
+from registro import Registro
 
-T = TypeVar('T')
+class Nodo:
+    def __init__(self, dato : Registro) -> None:
+        self.siguiente : Nodo = None
+        self.dato : Registro = dato
 
-class ListaSimple(Generic[T]):
-    def __init__(self) -> ListaSimple[T]:
+class ListaSimple:
+    def __init__(self) -> None:
         self.primero : Nodo = None
 
     def esta_vacia(self) -> bool:
@@ -23,8 +25,8 @@ class ListaSimple(Generic[T]):
 
         return contador
 
-    def insertar_final(self, dato: T) -> None:
-        nuevo = Nodo[T](dato)
+    def insertar_final(self, dato: Registro) -> None:
+        nuevo = Nodo[Registro](dato)
 
         if self.esta_vacia():
             self.primero = nuevo
@@ -39,64 +41,36 @@ class ListaSimple(Generic[T]):
 
         return
 
-    def insertar_posicion(self, posicion: int, dato: T) -> None:
-        if self.esta_vacia() or posicion >= self.contar_elementos() or posicion < 0:
-            raise IndexError("Indice fuera de rangos")
-
-        actual = self.primero
-        contador = 0
-
-        while contador != posicion - 1:
-            contador += 1
-            actual = actual.siguiente
-
-        nuevo = Nodo[T](dato)
-
-        nuevo.siguiente = actual.siguiente
-        actual.siguiente = nuevo
-
-    def obtener_nodo_posicion(self, posicion: int) -> Nodo[T]:
-
-        if self.esta_vacia():
-            return None
-
-        if posicion >= self.contar_elementos() or posicion < 0:
-            raise IndexError("Indice fuera de rango")
-
-        contador = 0
-        actual = self.primero
-
-        while contador != posicion:
-            contador += 1
-            actual = actual.siguiente
-
-        return actual
-
-    def obtener_posicion(self, posicion: int) -> T:
-        return self.obtener_nodo_posicion(posicion).dato
-
-    def eliminar_fin(self) -> None:
-        actual = self.obtener_nodo_posicion(self.contar_elementos() - 2)
-
-        actual.siguiente = None
-
-    def eliminar_posicion(self, posicion: int) -> None:
-        actual = self.obtener_nodo_posicion(posicion - 1)
-        actual.siguiente = actual.siguiente.siguiente
-
-    def modificar(self, posicion: int, dato: T) -> None:
-        self.obtener_nodo_posicion(posicion).dato = dato
-
-    def buscar(self, dato: T) -> T | None:
+    def buscar_codigo(self, codigo: int) -> Registro | None:
         actual = self.primero
         
         while actual != None:
-            if actual.dato == dato:
+            if actual.dato.codigo == codigo:
                 return actual.dato
             
             actual = actual.siguiente
         
         return None
+
+    def eliminar_codigo(self, codigo: int) -> None:
+        actual = self.primero
+
+        if actual.dato.codigo == codigo:
+            self.primero = actual.siguiente
+
+        while actual.siguiente != None:
+            if actual.siguiente.dato.codigo == codigo:
+                actual.siguiente = actual.siguiente.siguiente
+                return
+
+    def modificar(self, codigo: int, nombre: str) -> None:
+        actual = self.primero
+                
+        while actual != None:
+            if actual.dato.codigo == codigo:
+                actual.dato.nombre = nombre  
+                return             
+            actual = actual.siguiente
 
     def recorrer(self) -> None:
         actual = self.primero
