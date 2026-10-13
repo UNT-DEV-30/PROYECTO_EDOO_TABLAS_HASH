@@ -2,8 +2,8 @@ BORRADO = "BORRADO"
 
 class Registro:
     def __init__(self, codigo: int, nombre: str) -> None:
-        self.codigo = codigo
-        self.nombre = nombre
+        self.__codigo = codigo
+        self.__nombre = nombre
 
     @property
     def codigo(self) -> int:
