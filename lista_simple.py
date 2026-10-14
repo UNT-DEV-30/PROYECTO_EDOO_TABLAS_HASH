@@ -102,13 +102,10 @@ class ListaSimple:
         print(" ")
 
     def __str__(self) -> str:
-        cadena = ""
+        elementos = []
         actual = self.primero
-
-        while actual != None:
-            cadena += f"{actual.dato} -> "
+        while actual is not None:
+            elementos.append(str(actual.dato))
             actual = actual.siguiente
-
-        cadena += "None"
-
-        return cadena
+        elementos.append("None")
+        return " -> ".join(elementos)

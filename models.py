@@ -35,18 +35,18 @@ class Registro:
             return self.__codigo == otro.__codigo
         return False
 
-# Verifica si un numero es primo de manera recursiva
-def es_primo(n: int, divisor: int = 2) -> bool:
+# Verifica si un número es primo de manera iterativa
+def es_primo(n: int) -> bool:
     if n < 2:
         return False
     
-    if divisor * divisor > n:
-        return True
-    
-    if n % divisor == 0:
-        return False
-    
-    return es_primo(n, divisor + 1)
+    i = 2
+    while i * i <= n:
+        if n % i == 0:
+            return False
+        i += 1
+        
+    return True
 
 # Calcula el nuevo tamaño de un arreglo, teniendo en cuanta el tamaño anterior
 def siguiente_primo_rehash(primo_actual: int) -> int:
