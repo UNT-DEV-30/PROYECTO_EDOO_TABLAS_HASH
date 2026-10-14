@@ -66,11 +66,9 @@ class TablaHashEncadenamiento:
     def rehashing(self) -> None:
         antigua_capacidad = self.__capacidad
         antiguo_arreglo = self.__arreglo.copy()
-        self.__num_elementos = 0
-        
-        self.__capacidad = siguiente_primo_rehash(antigua_capacidad)
-        self.__arreglo = [None] * self.__capacidad
-        
+
+        registros = []
+
         for lista in antiguo_arreglo:
             if lista is None:
                 continue
