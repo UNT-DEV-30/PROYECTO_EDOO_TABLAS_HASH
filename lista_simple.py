@@ -69,7 +69,7 @@ class ListaSimple:
         
         return None
 
-    def eliminar_codigo(self, codigo: int) -> None:
+    def eliminar_codigo(self, codigo: int) -> bool:
         actual = self.primero
 
         if actual.dato.codigo == codigo:
@@ -78,16 +78,19 @@ class ListaSimple:
         while actual.siguiente != None:
             if actual.siguiente.dato.codigo == codigo:
                 actual.siguiente = actual.siguiente.siguiente
-                return
+                return True
+        return False
 
-    def modificar(self, codigo: int, nombre: str) -> None:
+    def modificar(self, codigo: int, nombre: str) -> bool:
         actual = self.primero
                 
         while actual != None:
             if actual.dato.codigo == codigo:
                 actual.dato.nombre = nombre  
-                return             
+                return True      
             actual = actual.siguiente
+
+        return False
 
     def recorrer(self) -> None:
         actual = self.primero

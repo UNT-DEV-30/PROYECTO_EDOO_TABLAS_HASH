@@ -15,10 +15,12 @@ class TablaHashEncadenamiento:
             self.__arreglo[posicion] = ListaSimple()
             self.__num_elementos += 1
 
-        lista_posicion: ListaSimple = self.__arreglo[posicion]
+        lista = self.__arreglo[posicion]
 
-        if lista_posicion.buscar_codigo(registro.codigo) is None:
-            lista_posicion.insertar_final(registro)
+        if not lista.buscar_codigo(registro.codigo) is None:
+            raise ValueError("Los codigos estan duplicado")
+
+        lista.insertar_final(registro)
 
         if self.factor_de_carga() >= 0.75:
             self.rehashing()
@@ -26,17 +28,32 @@ class TablaHashEncadenamiento:
     def buscar(self, codigo: int) -> Registro | None:
         posicion = codigo % self.__capacidad
 
-        return self.__arreglo[posicion].buscar_codigo(codigo)
+        lista = self.__arreglo[posicion]
+        
+        if lista is None:
+            return None
 
-    def modificar(self, codigo: int, nombre: str) -> None:
+        return lista.buscar_codigo(codigo)
+
+    def modificar(self, codigo: int, nombre: str) -> bool:
         posicion = codigo % self.__capacidad
 
-        self.__arreglo[posicion].modificar(codigo, nombre)
+        lista = self.__arreglo[posicion]
+        
+        if lista is None:
+            return False
 
-    def eliminar(self, codigo: int) -> None:
+        return lista.modificar(codigo, nombre)
+
+    def eliminar(self, codigo: int) -> bool:
         posicion = codigo % self.__capacidad
 
-        self.__arreglo[posicion].eliminar_codigo(codigo)
+        lista = self.__arreglo[posicion]
+
+        if lista is None:
+            return False
+
+        return self.__arreglo[posicion].eliminar_codigo(codigo)
 
     def mostrar(self) -> None:
         for i in range(self.__capacidad):
