@@ -1,4 +1,4 @@
-from registro import Registro
+from models import Registro
 from tablas_hash_encadenamiento import TablaHashEncadenamiento
 from tabla_hash_lineal import TablaHashLineal
 from tabla_hash_cuadratica import TablaHashCuadratica
@@ -102,7 +102,7 @@ if __name__ == "__main__":
     tablas_del_proyecto = [
         TablaHashEncadenamiento(),
         TablaHashLineal(11),
-        TablaHashCuadratica(11),
+        TablaHashCuadratica(),
         TablaHashDoble(11)
     ]
 

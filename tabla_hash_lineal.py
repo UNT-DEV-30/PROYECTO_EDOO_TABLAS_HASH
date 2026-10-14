@@ -1,5 +1,5 @@
 from typing import Optional
-from registro import Registro, BORRADO
+from models import Registro, BORRADO
 
 
 class TablaHashLineal:

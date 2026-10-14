@@ -1,5 +1,5 @@
 from typing import Optional
-from registro import Registro, BORRADO
+from models import Registro, BORRADO, siguiente_primo_rehash
 
 class TablaHashDoble:
     UMBRAL = 0.65
@@ -109,11 +109,8 @@ class TablaHashDoble:
             if actual is not None and actual != BORRADO
         ]
 
-        nueva_capacidad = self.capacidad * 2 + 1
-
-        # Llama a su propia función interna
-        while not self._es_primo(nueva_capacidad):
-            nueva_capacidad += 1
+        # Llama a la función centralizada de tu compañero
+        nueva_capacidad = siguiente_primo_rehash(self.capacidad)
 
         self.capacidad = nueva_capacidad
         self.tabla = [None] * self.capacidad
@@ -121,10 +118,3 @@ class TablaHashDoble:
 
         for reg in registros:
             self.insertar(reg)
-
-    @staticmethod
-    def _es_primo(numero: int) -> bool:
-        for divisor in range(2, int(numero ** 0.5) + 1):
-            if numero % divisor == 0:
-                return False
-        return True
