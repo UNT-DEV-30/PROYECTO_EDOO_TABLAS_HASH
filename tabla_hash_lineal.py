@@ -7,9 +7,7 @@ class TablaHashLineal:
 
     def __init__(self, capacidad: int = 11) -> None:
         self.capacidad = capacidad
-        self.tabla: list[Optional[Registro] | str | None] = [
-            None
-        ] * capacidad
+        self.tabla: list[Optional[Registro] | str | None] = [None] * capacidad
         self.total = 0
 
     def _hash(self, codigo: int) -> int:
@@ -22,7 +20,7 @@ class TablaHashLineal:
 
         for j in range(self.capacidad):
             indice = (posicion + j) % self.capacidad
-            actual = self.tabla[indice]
+            actual = self.tabla[indice] 
 
             if actual is None:
                 if primer_borrado != -1:
