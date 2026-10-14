@@ -1,13 +1,12 @@
 from typing import Optional
 from registro import Registro, BORRADO
-from tabla_hash_lineal import TablaHashLineal  # Importación directa de la clase
 
 class TablaHashDoble:
     UMBRAL = 0.65
 
     def __init__(self, capacidad: int = 11) -> None:
         self.capacidad = capacidad
-        self.tabla: list[Optional[Registro] | str | None] = [
+        self.tabla: list[Registro | str | None] = [
             None
         ] * capacidad
         self.total = 0
@@ -112,8 +111,8 @@ class TablaHashDoble:
 
         nueva_capacidad = self.capacidad * 2 + 1
 
-        # Llamada directa al método de la clase importada
-        while not TablaHashLineal._es_primo(nueva_capacidad):
+        # Llama a su propia función interna
+        while not self._es_primo(nueva_capacidad):
             nueva_capacidad += 1
 
         self.capacidad = nueva_capacidad
@@ -122,3 +121,10 @@ class TablaHashDoble:
 
         for reg in registros:
             self.insertar(reg)
+
+    @staticmethod
+    def _es_primo(numero: int) -> bool:
+        for divisor in range(2, int(numero ** 0.5) + 1):
+            if numero % divisor == 0:
+                return False
+        return True
