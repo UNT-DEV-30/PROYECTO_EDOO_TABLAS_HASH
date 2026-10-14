@@ -13,7 +13,7 @@ class TablaHashEncadenamiento:
 
         if self.__arreglo[posicion] is None:
             self.__arreglo[posicion] = ListaSimple()
-            self.__num_elementos += 1
+            
 
         lista = self.__arreglo[posicion]
 
@@ -21,6 +21,7 @@ class TablaHashEncadenamiento:
             raise ValueError("Los codigos estan duplicado")
 
         lista.insertar_final(registro)
+        self.__num_elementos += 1
 
         if self.factor_de_carga() >= 0.75:
             self.rehashing()
@@ -53,7 +54,13 @@ class TablaHashEncadenamiento:
         if lista is None:
             return False
 
-        return self.__arreglo[posicion].eliminar_codigo(codigo)
+        estado = self.__arreglo[posicion].eliminar_codigo(codigo)
+
+        if estado:
+            self.__num_elementos -= 1
+
+        return estado
+
 
     def mostrar(self) -> None:
         for i in range(self.__capacidad):
@@ -65,7 +72,6 @@ class TablaHashEncadenamiento:
     def rehashing(self) -> None:
         nueva_capacidad = siguiente_primo_rehash(self.__capacidad)
         nuevo_arreglo: list[ListaSimple] = [None] * nueva_capacidad
-        nuevo_numero_elementos = 0
 
         for lista_actual in self.__arreglo:
             if lista_actual is None:
@@ -78,11 +84,9 @@ class TablaHashEncadenamiento:
 
                 if nuevo_arreglo[nueva_posicion] is None:
                     nuevo_arreglo[nueva_posicion] = ListaSimple()
-                    nuevo_numero_elementos += 1
 
                 nuevo_arreglo[nueva_posicion].insertar_final(registro)
 
         self.__capacidad = nueva_capacidad
         self.__arreglo = nuevo_arreglo
-        self.__num_elementos = nuevo_numero_elementos
         
