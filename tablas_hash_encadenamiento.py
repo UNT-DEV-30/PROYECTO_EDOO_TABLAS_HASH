@@ -1,11 +1,11 @@
 from lista_simple import ListaSimple
-from registro import Registro
+from models import Registro
 
 class TablaHashEncadenamiento:
     def __init__(self) -> None:
         self.__capacidad: int = 11
         self.__arreglo: list[ListaSimple] = [None] * self.__capacidad
-        self.num_elementos: int = 0
+        self.__num_elementos: int = 0
         
 
     def insertar(self, registro: Registro) -> None:
@@ -13,15 +13,15 @@ class TablaHashEncadenamiento:
 
         if self.__arreglo[posicion] is None:
             self.__arreglo[posicion] = ListaSimple()
-            self.num_elementos += 1
+            self.__num_elementos += 1
 
         lista_posicion: ListaSimple = self.__arreglo[posicion]
 
         if lista_posicion.buscar_codigo(registro.codigo) is None:
             lista_posicion.insertar_final(registro)
 
-        if self.num_elementos/self.__capacidad >= 0.75:
-            self.rehashin()
+        if self.factor_de_carga() >= 0.75:
+            self.rehashing()
 
     def buscar(self, codigo: int) -> Registro | None:
         posicion = codigo % self.__capacidad
@@ -33,7 +33,7 @@ class TablaHashEncadenamiento:
 
         self.__arreglo[posicion].modificar(codigo, nombre)
 
-    def eliminar_codigo(self, codigo: int) -> None:
+    def eliminar(self, codigo: int) -> None:
         posicion = codigo % self.__capacidad
 
         self.__arreglo[posicion].eliminar_codigo(codigo)
@@ -42,8 +42,10 @@ class TablaHashEncadenamiento:
         for i in range(self.__capacidad):
             print(f"{i} : {self.__arreglo[i]}")
             
+    def factor_de_carga(self) -> float:
+        return self.__num_elementos/self.__capacidad
 
-    def rehashin(self) -> None:
+    def rehashing(self) -> None:
         nueva_capacidad = 2 * self.__capacidad + 1
         nuevo_arreglo: list[ListaSimple] = [None] * nueva_capacidad
         nuevo_numero_elementos = 0
@@ -65,5 +67,5 @@ class TablaHashEncadenamiento:
 
         self.__capacidad = nueva_capacidad
         self.__arreglo = nuevo_arreglo
-        self.num_elementos = nuevo_numero_elementos
+        self.__num_elementos = nuevo_numero_elementos
         

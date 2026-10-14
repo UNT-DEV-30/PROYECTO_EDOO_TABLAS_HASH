@@ -1,4 +1,4 @@
-from registro import Registro
+from models import Registro
 
 class Nodo:
     def __init__(self, dato : Registro) -> None:

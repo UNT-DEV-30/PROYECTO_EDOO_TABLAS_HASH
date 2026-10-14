@@ -1,4 +1,4 @@
-from registro import Registro, BORRADO
+from models import Registro, BORRADO
 
 class TablaHashCuadratica:
     def __init__(self, capacidad: int):
