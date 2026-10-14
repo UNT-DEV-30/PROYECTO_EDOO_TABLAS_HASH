@@ -1,5 +1,5 @@
 from lista_simple import ListaSimple
-from models import Registro
+from models import Registro, siguiente_primo_rehash
 
 class TablaHashEncadenamiento:
     def __init__(self) -> None:
@@ -13,12 +13,15 @@ class TablaHashEncadenamiento:
 
         if self.__arreglo[posicion] is None:
             self.__arreglo[posicion] = ListaSimple()
-            self.__num_elementos += 1
+            
 
-        lista_posicion: ListaSimple = self.__arreglo[posicion]
+        lista = self.__arreglo[posicion]
 
-        if lista_posicion.buscar_codigo(registro.codigo) is None:
-            lista_posicion.insertar_final(registro)
+        if not lista.buscar_codigo(registro.codigo) is None:
+            raise ValueError("Los codigos estan duplicado")
+
+        lista.insertar_final(registro)
+        self.__num_elementos += 1
 
         if self.factor_de_carga() >= 0.75:
             self.rehashing()
@@ -26,17 +29,38 @@ class TablaHashEncadenamiento:
     def buscar(self, codigo: int) -> Registro | None:
         posicion = codigo % self.__capacidad
 
-        return self.__arreglo[posicion].buscar_codigo(codigo)
+        lista = self.__arreglo[posicion]
+        
+        if lista is None:
+            return None
 
-    def modificar(self, codigo: int, nombre: str) -> None:
+        return lista.buscar_codigo(codigo)
+
+    def modificar(self, codigo: int, nombre: str) -> bool:
         posicion = codigo % self.__capacidad
 
-        self.__arreglo[posicion].modificar(codigo, nombre)
+        lista = self.__arreglo[posicion]
+        
+        if lista is None:
+            return False
 
-    def eliminar(self, codigo: int) -> None:
+        return lista.modificar(codigo, nombre)
+
+    def eliminar(self, codigo: int) -> bool:
         posicion = codigo % self.__capacidad
 
-        self.__arreglo[posicion].eliminar_codigo(codigo)
+        lista = self.__arreglo[posicion]
+
+        if lista is None:
+            return False
+
+        estado = self.__arreglo[posicion].eliminar_codigo(codigo)
+
+        if estado:
+            self.__num_elementos -= 1
+
+        return estado
+
 
     def mostrar(self) -> None:
         for i in range(self.__capacidad):
@@ -46,9 +70,8 @@ class TablaHashEncadenamiento:
         return self.__num_elementos/self.__capacidad
 
     def rehashing(self) -> None:
-        nueva_capacidad = 2 * self.__capacidad + 1
+        nueva_capacidad = siguiente_primo_rehash(self.__capacidad)
         nuevo_arreglo: list[ListaSimple] = [None] * nueva_capacidad
-        nuevo_numero_elementos = 0
 
         for lista_actual in self.__arreglo:
             if lista_actual is None:
@@ -61,11 +84,9 @@ class TablaHashEncadenamiento:
 
                 if nuevo_arreglo[nueva_posicion] is None:
                     nuevo_arreglo[nueva_posicion] = ListaSimple()
-                    nuevo_numero_elementos += 1
 
                 nuevo_arreglo[nueva_posicion].insertar_final(registro)
 
         self.__capacidad = nueva_capacidad
         self.__arreglo = nuevo_arreglo
-        self.__num_elementos = nuevo_numero_elementos
         
