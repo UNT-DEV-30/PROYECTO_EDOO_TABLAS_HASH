@@ -17,14 +17,16 @@ class TablaHashEncadenamiento:
 
         lista = self.__arreglo[posicion]
 
-        if not lista.buscar_codigo(registro.codigo) is None:
-            raise ValueError("Los codigos estan duplicado")
+        if lista.buscar_codigo(registro.codigo) is None:
+            lista.insertar_final(registro)
+            self.__num_elementos += 1
 
-        lista.insertar_final(registro)
-        self.__num_elementos += 1
+            if self.factor_carga() >= 0.75:
+                self.rehashing()
+        else:
+            lista.modificar(registro.codigo, registro.nombre)
 
-        if self.factor_de_carga() >= 0.75:
-            self.rehashing()
+        
 
     def buscar(self, codigo: int) -> Registro | None:
         posicion = codigo % self.__capacidad
@@ -35,16 +37,6 @@ class TablaHashEncadenamiento:
             return None
 
         return lista.buscar_codigo(codigo)
-
-    def modificar(self, codigo: int, nombre: str) -> bool:
-        posicion = codigo % self.__capacidad
-
-        lista = self.__arreglo[posicion]
-        
-        if lista is None:
-            return False
-
-        return lista.modificar(codigo, nombre)
 
     def eliminar(self, codigo: int) -> bool:
         posicion = codigo % self.__capacidad
@@ -61,7 +53,6 @@ class TablaHashEncadenamiento:
 
         return estado
 
-
     def mostrar(self) -> None:
         for i in range(self.__capacidad):
             print(f"{i} : {self.__arreglo[i]}")
@@ -70,23 +61,20 @@ class TablaHashEncadenamiento:
         return self.__num_elementos/self.__capacidad
 
     def rehashing(self) -> None:
-        nueva_capacidad = siguiente_primo_rehash(self.__capacidad)
-        nuevo_arreglo: list[ListaSimple] = [None] * nueva_capacidad
-
-        for lista_actual in self.__arreglo:
-            if lista_actual is None:
+        antigua_capacidad = self.__capacidad
+        antiguo_arreglo = self.__arreglo.copy()
+        self.__num_elementos = 0
+        
+        self.__capacidad = siguiente_primo_rehash(antigua_capacidad)
+        self.__arreglo = [None] * self.__capacidad
+        
+        for lista in antiguo_arreglo:
+            if lista is None:
                 continue
 
-            for j in range(lista_actual.contar_elementos()):
-                registro = lista_actual.obtener_posicion(j)
+            nodo_actual = lista.primero
 
-                nueva_posicion = registro.codigo % nueva_capacidad
-
-                if nuevo_arreglo[nueva_posicion] is None:
-                    nuevo_arreglo[nueva_posicion] = ListaSimple()
-
-                nuevo_arreglo[nueva_posicion].insertar_final(registro)
-
-        self.__capacidad = nueva_capacidad
-        self.__arreglo = nuevo_arreglo
+            while not nodo_actual is None:
+                self.insertar(nodo_actual.dato)
+                nodo_actual = nodo_actual.siguiente
         
