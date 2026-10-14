@@ -66,7 +66,7 @@ class TablaHashEncadenamiento:
         for i in range(self.__capacidad):
             print(f"{i} : {self.__arreglo[i]}")
             
-    def factor_de_carga(self) -> float:
+    def factor_carga(self) -> float:
         return self.__num_elementos/self.__capacidad
 
     def rehashing(self) -> None:
