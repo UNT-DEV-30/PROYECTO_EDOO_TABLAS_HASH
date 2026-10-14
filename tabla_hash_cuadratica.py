@@ -6,6 +6,10 @@ class TablaHashCuadratica:
         self.__arreglo: list[Registro] = [None] * self.__capacidad
         self.__num_elementos: int = 0  
 
+    @property
+    def capacidad(self) -> int:
+        return self.__capacidad
+
     def calcular_posicion(self, posicion_original: int, intento: int) -> int:
         return (posicion_original + intento**2) % self.__capacidad
 

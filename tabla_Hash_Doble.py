@@ -5,14 +5,16 @@ class TablaHashDoble:
     UMBRAL = 0.65
 
     def __init__(self, capacidad: int = 11) -> None:
-        self.capacidad = capacidad
-        self.tabla: list[Registro | str | None] = [
-            None
-        ] * capacidad
-        self.total = 0
+        self.__capacidad = capacidad
+        self.__tabla: list[Registro | str | None] = [None] * capacidad
+        self.__total = 0
+
+    @property
+    def capacidad(self) -> int:
+        return self.__capacidad
 
     def _h1(self, codigo: int) -> int:
-        return codigo % self.capacidad
+        return codigo % self.__capacidad
 
     def _h2(self, codigo: int) -> int:
         return 1 + (codigo % 10)
@@ -22,16 +24,16 @@ class TablaHashDoble:
         paso = self._h2(reg.codigo)
         primer_borrado = -1
 
-        for j in range(self.capacidad):
-            indice = (posicion_base + j * paso) % self.capacidad
-            actual = self.tabla[indice]
+        for j in range(self.__capacidad):
+            indice = (posicion_base + j * paso) % self.__capacidad
+            actual = self.__tabla[indice]
 
             if actual is None:
                 if primer_borrado != -1:
                     indice = primer_borrado
 
-                self.tabla[indice] = reg
-                self.total += 1
+                self.__tabla[indice] = reg
+                self.__total += 1
 
                 if self.factor_carga() > self.UMBRAL:
                     self.rehashing()
@@ -46,8 +48,8 @@ class TablaHashDoble:
                 return
 
         if primer_borrado != -1:
-            self.tabla[primer_borrado] = reg
-            self.total += 1
+            self.__tabla[primer_borrado] = reg
+            self.__total += 1
 
             if self.factor_carga() > self.UMBRAL:
                 self.rehashing()
@@ -60,9 +62,9 @@ class TablaHashDoble:
         posicion_base = self._h1(codigo)
         paso = self._h2(codigo)
 
-        for j in range(self.capacidad):
-            indice = (posicion_base + j * paso) % self.capacidad
-            actual = self.tabla[indice]
+        for j in range(self.__capacidad):
+            indice = (posicion_base + j * paso) % self.__capacidad
+            actual = self.__tabla[indice]
 
             if actual is None:
                 return None
@@ -76,45 +78,44 @@ class TablaHashDoble:
         posicion_base = self._h1(codigo)
         paso = self._h2(codigo)
 
-        for j in range(self.capacidad):
-            indice = (posicion_base + j * paso) % self.capacidad
-            actual = self.tabla[indice]
+        for j in range(self.__capacidad):
+            indice = (posicion_base + j * paso) % self.__capacidad
+            actual = self.__tabla[indice]
 
             if actual is None:
                 return False
 
             if actual != BORRADO and actual.codigo == codigo:
-                self.tabla[indice] = BORRADO
-                self.total -= 1
+                self.__tabla[indice] = BORRADO
+                self.__total -= 1
                 return True
 
         return False
 
     def mostrar(self) -> None:
-        print(f"\nTabla hash doble (capacidad: {self.capacidad})")
+        print(f"\nTabla hash doble (capacidad: {self.__capacidad})")
 
-        for indice, actual in enumerate(self.tabla):
+        for indice, actual in enumerate(self.__tabla):
             print(f"[{indice}] -> {actual}")
 
-        print(f"Registros activos: {self.total}")
+        print(f"Registros activos: {self.__total}")
         print(f"Factor de carga: {self.factor_carga():.2f}")
 
     def factor_carga(self) -> float:
-        return self.total / self.capacidad
+        return self.__total / self.__capacidad
 
     def rehashing(self) -> None:
         registros = [
             actual
-            for actual in self.tabla
+            for actual in self.__tabla
             if actual is not None and actual != BORRADO
         ]
 
-        # Llama a la función centralizada de tu compañero
-        nueva_capacidad = siguiente_primo_rehash(self.capacidad)
+        nueva_capacidad = siguiente_primo_rehash(self.__capacidad)
 
-        self.capacidad = nueva_capacidad
-        self.tabla = [None] * self.capacidad
-        self.total = 0
+        self.__capacidad = nueva_capacidad
+        self.__tabla = [None] * self.__capacidad
+        self.__total = 0
 
         for reg in registros:
             self.insertar(reg)

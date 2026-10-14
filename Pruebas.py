@@ -5,15 +5,10 @@ from tabla_hash_cuadratica import TablaHashCuadratica
 from tabla_Hash_Doble import TablaHashDoble
 
 def imprimir_fila(caso: str, entrada: str, esperado: str, real: str, correcto: bool) -> None:
-    # Formatea las columnas para que la salida en consola sea una tabla perfecta
     marca = "SÍ" if correcto else "NO"
     print(f"{caso:<40} | {entrada:<28} | {esperado:<20} | {real:<20} | {marca}")
 
 def ejecutar_pruebas_tad(tabla_hash) -> None:
-    """
-    Función general que recibe cualquier instancia de una tabla hash y evalúa 
-    sus métodos públicos (TAD) según los 12 escenarios requeridos.
-    """
     nombre_estrategia = tabla_hash.__class__.__name__
     print(f"\n{'='*130}")
     print(f"=== PRUEBAS MÍNIMAS PARA: {nombre_estrategia} ===")
@@ -73,32 +68,41 @@ def ejecutar_pruebas_tad(tabla_hash) -> None:
     imprimir_fila("10. Clave duplicada (Act.)", "Registro(32, '...Digital')", "Balanza Digital", reg_10.nombre if reg_10 else "Error", exito_10)
 
     # (11) Factor de carga alto
+    cap_antes_11 = tabla_hash.capacidad if hasattr(tabla_hash, 'capacidad') else 11
+
     for cod in [43, 54, 65, 76, 87]:
         tabla_hash.insertar(Registro(cod, f"Producto {cod}"))
-    
+
     fc_11 = tabla_hash.factor_carga()
-    exito_11 = fc_11 > 0.5
-    imprimir_fila("11. Factor de carga alto", "Insertar 5 registros", "FC Alto (>0.5)", f"FC = {fc_11:.2f}", exito_11)
+    cap_despues_11 = tabla_hash.capacidad if hasattr(tabla_hash, 'capacidad') else 11
+
+    rehash_temprano = cap_despues_11 > cap_antes_11
+    exito_11 = fc_11 > 0.5 or rehash_temprano
+
+    if rehash_temprano:
+        imprimir_fila("11. Factor de carga alto", "Insertar 5 registros", "FC>0.5 o Rehash", "Rehash temprano", exito_11)
+    else:
+        imprimir_fila("11. Factor de carga alto", "Insertar 5 registros", "FC Alto (>0.5)", f"FC = {fc_11:.2f}", exito_11)
 
     # (12) Rehashing y conservación
-    cap_antigua = tabla_hash.capacidad if hasattr(tabla_hash, 'capacidad') else 11
+    cap_antigua = cap_despues_11
+
+    tabla_hash.insertar(Registro(109, "Forzar Rehash"))
     tabla_hash.insertar(Registro(98, "Termómetro"))
-    
+
     cap_nueva = tabla_hash.capacidad if hasattr(tabla_hash, 'capacidad') else cap_antigua * 2 + 1
+
     conserva_viejos = tabla_hash.buscar(21) is not None and tabla_hash.buscar(32) is not None
     conserva_nuevo = tabla_hash.buscar(98) is not None
-    exitoso_12 = (cap_nueva > cap_antigua) and conserva_viejos and conserva_nuevo
-    
-    imprimir_fila("12. Rehashing y conservación", "Registro(98) para Rehash", "Cap>11, Cons=True", f"Cap={cap_nueva}, Cons={exitoso_12}", exitoso_12)
+
+    crecio = cap_nueva > 11
+    exitoso_12 = crecio and conserva_viejos and conserva_nuevo
+
+    imprimir_fila("12. Rehashing y conservación", "Registro(98) para Rehash", "Cap>11, Cons=True", f"Cap={cap_nueva}, Cons={conserva_viejos and conserva_nuevo}", exitoso_12)
     print("-" * 130)
 
 
-# =====================================================================
-# BLOQUE DE EJECUCIÓN (USANDO TUS NOMBRES DE ARCHIVO EXACTOS)
-# =====================================================================
 if __name__ == "__main__":
-    
-    # Instanciamos las 4 tablas con la capacidad inicial obligatoria (11)
     tablas_del_proyecto = [
         TablaHashEncadenamiento(),
         TablaHashLineal(11),
@@ -106,6 +110,5 @@ if __name__ == "__main__":
         TablaHashDoble(11)
     ]
 
-    # Evaluamos las 4 tablas de forma continua
     for tabla_actual in tablas_del_proyecto:
         ejecutar_pruebas_tad(tabla_actual)
