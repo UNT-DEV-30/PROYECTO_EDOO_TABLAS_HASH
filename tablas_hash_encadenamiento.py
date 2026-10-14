@@ -75,19 +75,6 @@ class TablaHashEncadenamiento:
 
             nodo_actual = lista.primero
 
-            while nodo_actual is not None:
-                registros.append(nodo_actual.dato)
+            while not nodo_actual is None:
+                self.insertar(nodo_actual.dato)
                 nodo_actual = nodo_actual.siguiente
-
-        self.__capacidad = siguiente_primo_rehash(antigua_capacidad)
-        self.__arreglo = [None] * self.__capacidad
-        self.__num_elementos = 0
-
-        for registro in registros:
-            posicion = registro.codigo % self.__capacidad
-
-            if self.__arreglo[posicion] is None:
-                self.__arreglo[posicion] = ListaSimple()
-
-            self.__arreglo[posicion].insertar_final(registro)
-            self.__num_elementos += 1
