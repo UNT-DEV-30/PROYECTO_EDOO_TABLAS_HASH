@@ -6,7 +6,10 @@ class TablaHashEncadenamiento:
         self.__capacidad: int = 11
         self.__arreglo: list[ListaSimple] = [None] * self.__capacidad
         self.__num_elementos: int = 0
-        
+
+    @property
+    def capacidad(self) -> int:
+        return self.__capacidad
 
     def insertar(self, registro: Registro) -> None:
         posicion = registro.codigo % self.__capacidad
@@ -63,18 +66,28 @@ class TablaHashEncadenamiento:
     def rehashing(self) -> None:
         antigua_capacidad = self.__capacidad
         antiguo_arreglo = self.__arreglo.copy()
-        self.__num_elementos = 0
-        
-        self.__capacidad = siguiente_primo_rehash(antigua_capacidad)
-        self.__arreglo = [None] * self.__capacidad
-        
+
+        registros = []
+
         for lista in antiguo_arreglo:
             if lista is None:
                 continue
 
             nodo_actual = lista.primero
 
-            while not nodo_actual is None:
-                self.insertar(nodo_actual.dato)
+            while nodo_actual is not None:
+                registros.append(nodo_actual.dato)
                 nodo_actual = nodo_actual.siguiente
-        
+
+        self.__capacidad = siguiente_primo_rehash(antigua_capacidad)
+        self.__arreglo = [None] * self.__capacidad
+        self.__num_elementos = 0
+
+        for registro in registros:
+            posicion = registro.codigo % self.__capacidad
+
+            if self.__arreglo[posicion] is None:
+                self.__arreglo[posicion] = ListaSimple()
+
+            self.__arreglo[posicion].insertar_final(registro)
+            self.__num_elementos += 1
