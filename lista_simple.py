@@ -25,8 +25,25 @@ class ListaSimple:
 
         return contador
 
+    def obtener_posicion(self, posicion: int) -> Registro:
+        contador = 0
+        actual = self.primero
+
+        if actual == None:
+            return None
+
+        while actual != None:
+            if contador == posicion:
+                return actual.dato
+            
+            actual = actual.siguiente
+            contador += 1
+
+        return None
+
+
     def insertar_final(self, dato: Registro) -> None:
-        nuevo = Nodo[Registro](dato)
+        nuevo = Nodo(dato)
 
         if self.esta_vacia():
             self.primero = nuevo
@@ -76,7 +93,19 @@ class ListaSimple:
         actual = self.primero
 
         while actual != None:
-            print(actual.dato, end=" ")
+            print(actual.dato.__str__, end=" -> ")
             actual = actual.siguiente
 
         print(" ")
+
+    def __str__(self) -> str:
+        cadena = ""
+        actual = self.primero
+
+        while actual != None:
+            cadena += f"{actual.dato} -> "
+            actual = actual.siguiente
+
+        cadena += "None"
+
+        return cadena
