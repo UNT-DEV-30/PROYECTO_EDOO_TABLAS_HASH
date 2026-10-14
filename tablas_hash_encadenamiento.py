@@ -1,5 +1,5 @@
 from lista_simple import ListaSimple
-from models import Registro
+from models import Registro, siguiente_primo_rehash
 
 class TablaHashEncadenamiento:
     def __init__(self) -> None:
@@ -63,7 +63,7 @@ class TablaHashEncadenamiento:
         return self.__num_elementos/self.__capacidad
 
     def rehashing(self) -> None:
-        nueva_capacidad = 2 * self.__capacidad + 1
+        nueva_capacidad = siguiente_primo_rehash(self.__capacidad)
         nuevo_arreglo: list[ListaSimple] = [None] * nueva_capacidad
         nuevo_numero_elementos = 0
 
