@@ -67,7 +67,8 @@ class TablaHashEncadenamiento:
         antigua_capacidad = self.__capacidad
         antiguo_arreglo = self.__arreglo.copy()
 
-        registros = []
+        self.__capacidad = siguiente_primo_rehash(antigua_capacidad)
+        self.__arreglo = [None] * self.__capacidad
 
         for lista in antiguo_arreglo:
             if lista is None:
