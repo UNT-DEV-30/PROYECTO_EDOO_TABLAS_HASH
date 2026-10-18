@@ -1,9 +1,9 @@
 
-from registro import Registro
-from tabla_hash_encadenamiento import TablaHashEncadenamiento
+from models import Registro
+from tablas_hash_encadenamiento import TablaHashEncadenamiento
 from tabla_hash_lineal import TablaHashLineal
-from tabla_hash_cuadratico import TablaHashCuadratico
-from tabla_hash_doble import TablaHashDoble
+from tabla_hash_cuadratica import TablaHashCuadratica
+from tabla_Hash_Doble import TablaHashDoble
 
 
 def probar_tabla(nombre, tabla):
@@ -43,7 +43,7 @@ def main():
     tablas = [
         ("ENCADENAMIENTO", TablaHashEncadenamiento()),
         ("SONDEO LINEAL", TablaHashLineal()),
-        ("SONDEO CUADRÁTICO", TablaHashCuadratico()),
+        ("SONDEO CUADRÁTICO", TablaHashCuadratica()),
         ("DOBLE HASHING", TablaHashDoble())
     ]
 

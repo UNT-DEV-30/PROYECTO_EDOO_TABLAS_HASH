@@ -7,22 +7,20 @@ class TablaHashLineal:
 
     def __init__(self, capacidad: int = 11) -> None:
         self.capacidad = capacidad
-        self.tabla: list[Optional[Registro] | str | None] = [
-            None
-        ] * capacidad
+        self.tabla: list[Optional[Registro] | str | None] = [None] * capacidad
         self.total = 0
 
     def _hash(self, codigo: int) -> int:
         return codigo % self.capacidad
 
     def insertar(self, reg: Registro) -> None:
-        # Actualizar si el código ya existe.
+        # Actualizar si el código ya existe.okey
         posicion = self._hash(reg.codigo)
         primer_borrado = -1
 
         for j in range(self.capacidad):
             indice = (posicion + j) % self.capacidad
-            actual = self.tabla[indice]
+            actual = self.tabla[indice] 
 
             if actual is None:
                 if primer_borrado != -1:
