@@ -1,6 +1,6 @@
 
 from models import Registro
-from tablas_hash_encadenamiento import TablaHashEncadenamiento
+from tabla_hash_encadenamiento import TablaHashEncadenamiento
 from tabla_hash_lineal import TablaHashLineal
 from tabla_hash_cuadratica import TablaHashCuadratica
 from tabla_Hash_Doble import TablaHashDoble
