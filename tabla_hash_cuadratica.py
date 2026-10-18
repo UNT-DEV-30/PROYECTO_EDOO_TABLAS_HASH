@@ -23,13 +23,13 @@ class TablaHashCuadratica:
             posicion = self.calcular_posicion(posicion_original, intento)
             registro_actual = self.__arreglo[posicion]
 
-            if not registro_actual is None and not registro_actual is BORRADO:
+            if not registro_actual is None and registro_actual != BORRADO:
                 if registro_actual.codigo == registro.codigo:
                     self.__arreglo[posicion] = registro
                     return
 
 
-            if (registro_actual is None or registro_actual is BORRADO) and posicion_disponible is None:
+            if (registro_actual is None or registro_actual == BORRADO) and posicion_disponible is None:
                 posicion_disponible = posicion
 
             if registro_actual is None:
@@ -52,7 +52,7 @@ class TablaHashCuadratica:
         registro_actual = self.__arreglo[posicion]
         
         while not registro_actual is None and intento < self.__capacidad:
-            if not registro_actual is BORRADO and registro_actual.codigo == codigo:
+            if registro_actual != BORRADO and registro_actual.codigo == codigo:
                 return registro_actual
             
             intento += 1
@@ -69,7 +69,7 @@ class TablaHashCuadratica:
         registro_actual = self.__arreglo[posicion]
          
         while not registro_actual is None and intento < self.__capacidad:
-            if not registro_actual is BORRADO and registro_actual.codigo == codigo:
+            if registro_actual != BORRADO and registro_actual.codigo == codigo:
                 self.__arreglo[posicion] = BORRADO
                 self.__num_elementos -= 1
                 return True
@@ -96,7 +96,7 @@ class TablaHashCuadratica:
         self.__arreglo = [None] * self.__capacidad
 
         for reg in antiguo_arreglo:
-            if reg is None or reg is BORRADO:
+            if reg is None or reg == BORRADO:
                 continue
 
             self.insertar(reg)

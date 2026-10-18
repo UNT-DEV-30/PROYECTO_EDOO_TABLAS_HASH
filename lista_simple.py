@@ -22,7 +22,7 @@ class ListaSimple:
 
         return contador
 
-    def obtener_posicion(self, posicion: int) -> Registro:
+    def obtener_posicion(self, posicion: int) -> Registro | None:
         contador = 0
         actual = self.primero
 
