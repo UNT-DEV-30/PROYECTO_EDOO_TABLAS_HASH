@@ -1,5 +1,5 @@
 from typing import Optional
-from models import Registro, BORRADO
+from models import Registro, BORRADO, es_primo
 
 
 class TablaHashLineal:
@@ -105,7 +105,7 @@ class TablaHashLineal:
 
         nueva_capacidad = self.capacidad * 2 + 1
 
-        while not self._es_primo(nueva_capacidad):
+        while not es_primo(nueva_capacidad):
             nueva_capacidad += 1
 
         self.capacidad = nueva_capacidad
@@ -114,14 +114,3 @@ class TablaHashLineal:
 
         for reg in registros:
             self.insertar(reg)
-
-    @staticmethod
-    def _es_primo(numero: int) -> bool:
-        if numero < 2:
-            return False
-
-        for divisor in range(2, int(numero ** 0.5) + 1):
-            if numero % divisor == 0:
-                return False
-
-        return True
