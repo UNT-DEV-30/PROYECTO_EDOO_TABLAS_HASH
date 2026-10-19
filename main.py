@@ -25,11 +25,38 @@ def menu_operaciones():
     print("4. Mostrar tabla")
     print("5. Mostrar factor de carga")
     print("6. Ejecutar rehashing manual")
+    print("7. Cargar datos de prueba (Inventario de Laboratorio)")
     print("0. Volver al menú principal")
     return input("Seleccione una operación: ")
 
 
+def menu_pruebas():
+    print("\n========== PRUEBAS DEMOSTRATIVAS ==========")
+    print("1. Encadenamiento")
+    print("2. Sondeo lineal")
+    print("3. Sondeo cuadrático")
+    print("4. Doble hashing")
+    print("0. Volver al menú principal")
+    return input("Seleccione una estrategia: ")
+
+
+def cargar_datos_prueba(tabla):
+    
+    registros_prueba = [
+        Registro(10, "Probeta Graduada"),
+        Registro(21, "Pipeta Automática"),
+        Registro(32, "Mechero Bunsen"),
+        Registro(43, "Tubos de Ensayo"),
+        Registro(54, "Placa Petri"),
+        Registro(65, "Microscopio Óptico"),
+        Registro(76, "Centrífuga de Mesa")
+    ]
+    for reg in registros_prueba:
+        tabla.insertar(reg)
+    print("\n¡Datos de prueba cargados exitosamente en la tabla!")
+
 def operar(tabla):
+    
     while True:
         opcion = menu_operaciones()
 
@@ -79,6 +106,10 @@ def operar(tabla):
             print("Capacidad nueva:", tabla.capacidad)
             tabla.mostrar()
 
+        elif opcion == "7":  
+            cargar_datos_prueba(tabla)
+            tabla.mostrar()
+            
         elif opcion == "0":
             break
 
@@ -102,20 +133,20 @@ def pruebas_demostrativas(nombre, clase):
     print("PRUEBAS:", nombre.upper())
     print("=" * 55)
 
-    print("\n1. INSERTAR REGISTROS Y PROVOCAR COLISIONES")
+    print("\n1. INSERTAR REGISTROS (CONTROL DE INVENTARIO DE LABORATORIO) Y PROVOCAR COLISIONES")
     for codigo, nombre_registro in [
-        (11, "Carlos"),
-        (22, "Ana"),
-        (33, "Luis"),
-        (44, "Maria"),
-        (55, "Pedro")
+        (11, "Microscopio Óptico"),
+        (22, "Centrífuga de Mesa"),
+        (33, "Matraz Erlenmeyer"),
+        (44, "Espectrofotómetro"),
+        (55, "Balanza Analítica")
     ]:
         tabla.insertar(Registro(codigo, nombre_registro))
 
     tabla.mostrar()
 
     print("\n2. ACTUALIZAR UN CÓDIGO DUPLICADO")
-    tabla.insertar(Registro(22, "Ana actualizada"))
+    tabla.insertar(Registro(22, "Centrífuga Digital Avanzada"))
     print("Resultado:", tabla.buscar(22))
 
     print("\n3. BÚSQUEDA EXITOSA")
@@ -147,13 +178,22 @@ def pruebas_demostrativas(nombre, clase):
     tabla.mostrar()
     print("\nFin de las pruebas de", nombre)
 
-
 def ejecutar_pruebas():
-    for nombre, clase in crear_estrategias():
-        pruebas_demostrativas(nombre, clase)
+    estrategias = crear_estrategias()
 
-    print("\nTodas las pruebas demostrativas finalizaron.")
+    while True:
+        opcion = menu_pruebas()
 
+        if opcion == "0":
+            break
+
+        elif opcion in ("1", "2", "3", "4"):
+            indice = int(opcion) - 1
+            nombre, clase = estrategias[indice]
+            pruebas_demostrativas(nombre, clase)
+
+        else:
+            print("Opción no válida.")
 
 def main():
     estrategias = crear_estrategias()
